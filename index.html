@@ -1,11 +1,54 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SEAuP</title>
+  <title>SEAuP | Global Atomy Access</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    async function detectLanguageAndRedirect() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        const lang = data.languages ? data.languages.split(',')[0] : 'en';
+
+        const translations = {
+          'ko': 'index-ko.html',
+          'zh': 'index-zh.html',
+          'zh-CN': 'index-zh-CN.html',
+          'ja': 'index-ja.html',
+          'es': 'index-es.html',
+          'fr': 'index-fr.html',
+          'de': 'index-de.html',
+          'ru': 'index-ru.html',
+          'pt': 'index-pt.html',
+          'ro': 'index-ro.html',
+          'cs': 'index-cs.html',
+          'no': 'index-no.html',
+          'da': 'index-da.html',
+          'th': 'index-th.html',
+          'ms': 'index-ms.html',
+          'id': 'index-id.html',
+          'tl': 'index-tl.html',
+          'pl': 'index-pl.html',
+          'nl': 'index-nl.html',
+          'it': 'index-it.html',
+          'sv': 'index-sv.html'
+        };
+
+        if (translations[lang]) {
+          window.location.href = translations[lang];
+        }
+      } catch (e) {
+        console.log("Language detection failed, stay in English.");
+      }
+    }
+    detectLanguageAndRedirect();
+  </script>
 </head>
 <body>
   <h1>Welcome to SEAuP</h1>
-  <p>This is your landing page. Try visiting <a href="/register">/register</a> to be redirected to your form.</p>
+  <p>This is the global access hub for Atomy — Korea's most trusted direct selling health & beauty brand.</p>
+  <p>We will redirect you to a localized experience based on your region.</p>
 </body>
 </html>
