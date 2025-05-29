@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voucher Success</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f6f9ff; color: #333; padding: 2rem; }
+    .lang-block { display: none; margin: 1.5rem 0; }
+    h1 { color: #0d6efd; }
+  </style>
+</head>
+<body>
+  <h1 id="title"></h1>
+  <div id="lang-content">
+    <div class="lang-block" data-lang="en">
+      <p>Success! Your voucher code is:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="zh-Hant">
+      <p>兌換成功！您的住宿券代碼為：</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="zh-Hans">
+      <p>兑换成功！您的住宿券代码为：</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="ru">
+      <p>Успешно! Ваш код ваучера:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="de">
+      <p>Erfolgreich! Ihr Gutscheincode lautet:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="fr">
+      <p>Succès ! Votre code de bon est :</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="es">
+      <p>¡Éxito! Su código de vale es:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="pt">
+      <p>Sucesso! Seu código do voucher é:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="id">
+      <p>Berhasil! Kode voucher Anda adalah:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="th">
+      <p>สำเร็จ! รหัสเวาเชอร์ของคุณคือ:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+    <div class="lang-block" data-lang="tl">
+      <p>Tagumpay! Ang iyong voucher code ay:</p>
+      <p><strong>{voucher_code}</strong></p>
+    </div>
+  </div>
+  <script>
+    const lang = new URLSearchParams(window.location.search).get('lang') || 'en';
+    document.querySelectorAll('.lang-block').forEach(el => {
+      if (el.dataset.lang === lang) el.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Success</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7faff; color: #333; padding: 2rem; }
+    .lang-block { display: none; margin: 1.5rem 0; }
+    h1 { color: #0072c6; }
+  </style>
+</head>
+<body>
+  <h1 id="title"></h1>
+  <div id="lang-content">
+    <div class="lang-block" data-lang="en">
+      <p>Welcome! Your account has been created.</p>
+      <p>Your member number is <b>{member_number}</b></p>
+      <p>Your password is <b>{password}</b></p>
+      <p>You can log in at <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="zh-Hant">
+      <p>歡迎！您的會員帳號已建立。</p>
+      <p>會員編號：<b>{member_number}</b></p>
+      <p>密碼：<b>{password}</b></p>
+      <p>登入官網：<a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="zh-Hans">
+      <p>欢迎！您的会员账号已创建。</p>
+      <p>会员编号：<b>{member_number}</b></p>
+      <p>密码：<b>{password}</b></p>
+      <p>登录官网：<a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="ru">
+      <p>Добро пожаловать! Ваш аккаунт создан.</p>
+      <p>Номер участника: <b>{member_number}</b></p>
+      <p>Пароль: <b>{password}</b></p>
+      <p>Официальный сайт: <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="de">
+      <p>Willkommen! Ihr Konto wurde erstellt.</p>
+      <p>Mitgliedsnummer: <b>{member_number}</b></p>
+      <p>Passwort: <b>{password}</b></p>
+      <p>Offizielle Website: <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="fr">
+      <p>Bienvenue ! Votre compte a été créé.</p>
+      <p>Numéro de membre : <b>{member_number}</b></p>
+      <p>Mot de passe : <b>{password}</b></p>
+      <p>Site officiel : <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="es">
+      <p>¡Bienvenido! Su cuenta ha sido creada.</p>
+      <p>Número de miembro: <b>{member_number}</b></p>
+      <p>Contraseña: <b>{password}</b></p>
+      <p>Sitio oficial: <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="pt">
+      <p>Bem-vindo! Sua conta foi criada.</p>
+      <p>Número de membro: <b>{member_number}</b></p>
+      <p>Senha: <b>{password}</b></p>
+      <p>Site oficial: <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="id">
+      <p>Selamat datang! Akun Anda telah dibuat.</p>
+      <p>Nomor anggota: <b>{member_number}</b></p>
+      <p>Kata sandi: <b>{password}</b></p>
+      <p>Situs resmi: <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="th">
+      <p>ยินดีต้อนรับ! บัญชีของคุณถูกสร้างแล้ว</p>
+      <p>หมายเลขสมาชิก: <b>{member_number}</b></p>
+      <p>รหัสผ่าน: <b>{password}</b></p>
+      <p>เว็บไซต์ทางการ: <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+    <div class="lang-block" data-lang="tl">
+      <p>Maligayang pagdating! Nalikha na ang iyong account.</p>
+      <p>Member Number: <b>{member_number}</b></p>
+      <p>Password: <b>{password}</b></p>
+      <p>Opisyal na Website: <a href="{official_website}" target="_blank">{official_website}</a></p>
+    </div>
+  </div>
+  <script>
+    const lang = new URLSearchParams(window.location.search).get('lang') || 'en';
+    document.querySelectorAll('.lang-block').forEach(el => {
+      if (el.dataset.lang === lang) el.style.display = 'block';
+    });
+  </script>
+</body>
+</html>
