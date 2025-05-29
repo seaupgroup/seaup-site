@@ -2,89 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register Success</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f7faff; color: #333; padding: 2rem; }
-    .lang-block { display: none; margin: 1.5rem 0; }
-    h1 { color: #0072c6; }
+    body { font-family: Arial, "Noto Sans TC", "Noto Sans SC", "Microsoft JhengHei", sans-serif; margin: 60px; font-size: 1.2em; }
+    .info { margin: 30px 0; }
   </style>
 </head>
 <body>
-  <h1 id="title"></h1>
-  <div id="lang-content">
-    <div class="lang-block" data-lang="en">
-      <p>Welcome! Your account has been created.</p>
-      <p>Your member number is <b>{member_number}</b></p>
-      <p>Your password is <b>{password}</b></p>
-      <p>You can log in at <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="zh-Hant">
-      <p>歡迎！您的會員帳號已建立。</p>
-      <p>會員編號：<b>{member_number}</b></p>
-      <p>密碼：<b>{password}</b></p>
-      <p>登入官網：<a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="zh-Hans">
-      <p>欢迎！您的会员账号已创建。</p>
-      <p>会员编号：<b>{member_number}</b></p>
-      <p>密码：<b>{password}</b></p>
-      <p>登录官网：<a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="ru">
-      <p>Добро пожаловать! Ваш аккаунт создан.</p>
-      <p>Номер участника: <b>{member_number}</b></p>
-      <p>Пароль: <b>{password}</b></p>
-      <p>Официальный сайт: <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="de">
-      <p>Willkommen! Ihr Konto wurde erstellt.</p>
-      <p>Mitgliedsnummer: <b>{member_number}</b></p>
-      <p>Passwort: <b>{password}</b></p>
-      <p>Offizielle Website: <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="fr">
-      <p>Bienvenue ! Votre compte a été créé.</p>
-      <p>Numéro de membre : <b>{member_number}</b></p>
-      <p>Mot de passe : <b>{password}</b></p>
-      <p>Site officiel : <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="es">
-      <p>¡Bienvenido! Su cuenta ha sido creada.</p>
-      <p>Número de miembro: <b>{member_number}</b></p>
-      <p>Contraseña: <b>{password}</b></p>
-      <p>Sitio oficial: <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="pt">
-      <p>Bem-vindo! Sua conta foi criada.</p>
-      <p>Número de membro: <b>{member_number}</b></p>
-      <p>Senha: <b>{password}</b></p>
-      <p>Site oficial: <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="id">
-      <p>Selamat datang! Akun Anda telah dibuat.</p>
-      <p>Nomor anggota: <b>{member_number}</b></p>
-      <p>Kata sandi: <b>{password}</b></p>
-      <p>Situs resmi: <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="th">
-      <p>ยินดีต้อนรับ! บัญชีของคุณถูกสร้างแล้ว</p>
-      <p>หมายเลขสมาชิก: <b>{member_number}</b></p>
-      <p>รหัสผ่าน: <b>{password}</b></p>
-      <p>เว็บไซต์ทางการ: <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
-    <div class="lang-block" data-lang="tl">
-      <p>Maligayang pagdating! Nalikha na ang iyong account.</p>
-      <p>Member Number: <b>{member_number}</b></p>
-      <p>Password: <b>{password}</b></p>
-      <p>Opisyal na Website: <a href="{official_website}" target="_blank">{official_website}</a></p>
-    </div>
+  <h2 id="title"></h2>
+  <div class="info">
+    <p id="success_line"></p>
+    <p id="member_line"></p>
+    <p id="password_line"></p>
+    <p id="login_line"></p>
   </div>
+  <a id="home_link" href="/"></a>
   <script>
-    const lang = new URLSearchParams(window.location.search).get('lang') || 'en';
-    document.querySelectorAll('.lang-block').forEach(el => {
-      if (el.dataset.lang === lang) el.style.display = 'block';
-    });
+    function getParam(param) {
+      let url = new URL(window.location.href);
+      return url.searchParams.get(param) || '';
+    }
+    // 多語字典
+    const langPacks = {
+      en: {
+        title: "Welcome!",
+        success_line: "Your account has been created.",
+        member_line: "Your member number is: ",
+        password_line: "Your password is: ",
+        login_line: "You can log in at ",
+        home: "Back to Homepage"
+      },
+      zh_tw: {
+        title: "歡迎加入！",
+        success_line: "您的帳號已經成功建立。",
+        member_line: "您的會員編號是：",
+        password_line: "您的密碼是：",
+        login_line: "請前往下方網址登入：",
+        home: "回首頁"
+      },
+      zh_cn: {
+        title: "欢迎加入！",
+        success_line: "您的账号已成功建立。",
+        member_line: "您的会员编号是：",
+        password_line: "您的密码是：",
+        login_line: "请前往下方网址登录：",
+        home: "回首页"
+      },
+      fr: {
+        title: "Bienvenue !",
+        success_line: "Votre compte a été créé.",
+        member_line: "Votre numéro de membre : ",
+        password_line: "Votre mot de passe : ",
+        login_line: "Connectez-vous sur ",
+        home: "Retour à l’accueil"
+      },
+      de: {
+        title: "Willkommen!",
+        success_line: "Ihr Konto wurde erstellt.",
+        member_line: "Ihre Mitgliedsnummer: ",
+        password_line: "Ihr Passwort: ",
+        login_line: "Sie können sich anmelden unter ",
+        home: "Zurück zur Startseite"
+      },
+      ru: {
+        title: "Добро пожаловать!",
+        success_line: "Ваша учетная запись создана.",
+        member_line: "Ваш номер участника: ",
+        password_line: "Ваш пароль: ",
+        login_line: "Вы можете войти на сайт: ",
+        home: "Вернуться на главную"
+      },
+      th: {
+        title: "ยินดีต้อนรับ!",
+        success_line: "บัญชีของคุณถูกสร้างเรียบร้อยแล้ว",
+        member_line: "หมายเลขสมาชิกของคุณคือ: ",
+        password_line: "รหัสผ่านของคุณคือ: ",
+        login_line: "เข้าสู่ระบบได้ที่ ",
+        home: "กลับสู่หน้าหลัก"
+      },
+      es: {
+        title: "¡Bienvenido!",
+        success_line: "Su cuenta ha sido creada.",
+        member_line: "Su número de miembro es: ",
+        password_line: "Su contraseña es: ",
+        login_line: "Puede iniciar sesión en ",
+        home: "Volver a la página principal"
+      },
+      pt: {
+        title: "Bem-vindo!",
+        success_line: "Sua conta foi criada.",
+        member_line: "Seu número de membro é: ",
+        password_line: "Sua senha é: ",
+        login_line: "Você pode fazer login em ",
+        home: "Voltar à página inicial"
+      },
+      fil: {
+        title: "Maligayang pagdating!",
+        success_line: "Matagumpay na nalikha ang iyong account.",
+        member_line: "Ang iyong member number ay: ",
+        password_line: "Ang iyong password ay: ",
+        login_line: "Maari kang mag-login sa ",
+        home: "Bumalik sa Homepage"
+      },
+      id: {
+        title: "Selamat datang!",
+        success_line: "Akun Anda telah berhasil dibuat.",
+        member_line: "Nomor member Anda: ",
+        password_line: "Password Anda: ",
+        login_line: "Anda dapat login di ",
+        home: "Kembali ke Beranda"
+      }
+    };
+
+    // 自動偵測語言
+    let lang = (getParam('lang') || 'en').toLowerCase();
+    if (lang.startsWith('zh')) {
+      lang = lang.includes('tw') || lang.includes('hant') ? 'zh_tw' : 'zh_cn';
+    }
+    if (lang.startsWith('fil')) lang = 'fil';
+    if (lang.startsWith('es')) lang = 'es';
+    if (lang.startsWith('pt')) lang = 'pt';
+    if (lang.startsWith('de')) lang = 'de';
+    if (lang.startsWith('fr')) lang = 'fr';
+    if (lang.startsWith('ru')) lang = 'ru';
+    if (lang.startsWith('th')) lang = 'th';
+    if (lang.startsWith('id')) lang = 'id';
+    if (!langPacks[lang]) lang = 'en';
+    let pack = langPacks[lang];
+
+    // 注入內容
+    document.getElementById('title').textContent = pack.title;
+    document.getElementById('success_line').textContent = pack.success_line;
+    document.getElementById('member_line').textContent = pack.member_line + getParam('member_number');
+    document.getElementById('password_line').textContent = pack.password_line + getParam('password');
+    var site = getParam('official_website');
+    let login_html = pack.login_line;
+    if (site) login_html += `<a href="${site}" target="_blank">${site}</a>`;
+    document.getElementById('login_line').innerHTML = login_html;
+    document.getElementById('home_link').textContent = pack.home;
   </script>
 </body>
 </html>

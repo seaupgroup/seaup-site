@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Atomy HemoHIM | Flash Offer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, "Noto Sans TC", "Noto Sans SC", "Microsoft JhengHei", sans-serif; margin: 0; padding: 0; background: #f8fafc; }
+    .header { background: #ea4a2b; color: #fff; text-align: center; padding: 28px 8px 18px 8px; font-size: 2em; letter-spacing: 2px; }
+    .promo { background: #fff6eb; margin: 20px auto; max-width: 700px; border-radius: 16px; box-shadow: 0 4px 12px #eee; padding: 18px 18px 12px 18px; text-align: center; }
+    .promo strong { color: #e24430; }
+    .lang-select { margin: 10px 0 14px 0; text-align: right; padding-right: 30px; }
+    select { padding: 3px 8px; border-radius: 6px; }
+    @media (max-width: 650px) {
+      .header { font-size: 1.4em; padding: 18px 6px 12px 6px;}
+      .promo { max-width: 98vw; padding: 12px 4vw;}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Atomy HemoHIM</div>
+  <div class="lang-select">
+    <label for="langsel">🌐</label>
+    <select id="langsel">
+      <option value="en">English</option>
+      <option value="zh_tw">繁體中文</option>
+      <option value="zh_cn">简体中文</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="ru">Русский</option>
+      <option value="th">ไทย</option>
+      <option value="es">Español</option>
+      <option value="pt">Português</option>
+      <option value="fil">Filipino</option>
+      <option value="id">Bahasa Indonesia</option>
+    </select>
+  </div>
+  <div class="promo" id="promo-msg"></div>
+  <script>
+    const promos = {
+      en: "May 29 ~ May 31, 2025  <b>Flash Offer</b>: For Those Battling Cancer or Immune Issues<br>Join 15+ Million Global Users of HemoHim - Even Atomy’s Chairman Used It to Recover from Terminal Liver Cancer.<br><strong>Order 1 Box Before May 31 and Get a $100 Hotel Voucher (Valid in 50 Chinese Cities)</strong>",
+      zh_tw: "2025年5月29日至31日 <b>限時快閃優惠</b>：特別獻給抗癌與免疫低下者<br>全球1500萬用戶推薦，連Atomy董事長都靠HemoHim逆轉末期肝硬化！<br><strong>5月31日前購買一盒，即贈價值100美元的中國50城特色民宿住宿券</strong>",
+      zh_cn: "2025年5月29日~31日 <b>限时闪购</b>：致抗癌与免疫低下者<br>全球超1500万用户见证，连Atomy董事长都用HemoHim逆转肝硬化晚期！<br><strong>5月31日前购买一盒，即送价值100美元的中国50城民宿住宿券</strong>",
+      fr: "29-31 mai 2025 <b>Offre Flash</b> : Pour les personnes luttant contre le cancer ou une faible immunité<br>Rejoignez plus de 15 millions d’utilisateurs HemoHim dans le monde – Même le président d’Atomy l’a utilisé pour se rétablir d’une cirrhose terminale.<br><strong>Commandez 1 boîte avant le 31 mai et recevez un bon hôtel de 100 $ (valable dans 50 villes chinoises)</strong>",
+      de: "29.–31. Mai 2025 <b>Blitzangebot</b>: Für Krebspatienten oder Menschen mit Immunschwäche<br>Über 15 Millionen nutzen HemoHim – sogar Atomy’s Chairman überwand Leberzirrhose damit.<br><strong>Bestellen Sie bis 31. Mai eine Box und erhalten Sie einen 100-$-Hotelgutschein (gültig in 50 chinesischen Städten)</strong>",
+      ru: "29–31 мая 2025 <b>Молниеносная акция</b>: Для борющихся с раком и иммунодефицитом<br>15+ миллионов пользователей по всему миру. Даже председатель Atomy вылечился с HemoHim от терминального цирроза!<br><strong>Закажите 1 коробку до 31 мая и получите гостиничный ваучер на $100 (действителен в 50 городах Китая)</strong>",
+      th: "29-31 พ.ค. 2025 <b>โปรโมชั่นพิเศษ</b> สำหรับผู้ต่อสู้กับโรคมะเร็งหรือปัญหาภูมิคุ้มกัน<br>กว่า 15 ล้านคนทั่วโลกเลือก HemoHim – แม้แต่ประธาน Atomy ก็ฟื้นตัวจากตับแข็งระยะสุดท้ายด้วย HemoHim<br><strong>สั่งซื้อ 1 กล่องก่อน 31 พ.ค. รับคูปองที่พักจีนมูลค่า $100 (ใช้ได้ใน 50 เมือง)</strong>",
+      es: "29–31 de mayo de 2025 <b>Oferta Flash</b>: Para quienes luchan contra el cáncer o problemas inmunes<br>Únete a más de 15 millones de usuarios de HemoHim: incluso el presidente de Atomy lo usó para recuperarse de una cirrosis terminal.<br><strong>Pide 1 caja antes del 31 de mayo y recibe un cupón hotelero de $100 (válido en 50 ciudades chinas)</strong>",
+      pt: "29 a 31 de maio de 2025 <b>Oferta Relâmpago</b>: Para quem luta contra câncer ou baixa imunidade<br>Mais de 15 milhões de usuários de HemoHim no mundo – até o presidente da Atomy recuperou-se de cirrose terminal.<br><strong>Peça 1 caixa antes de 31 de maio e ganhe voucher de hotel de $100 (válido em 50 cidades da China)</strong>",
+      fil: "Mayo 29–31, 2025 <b>Flash Offer</b>: Para sa may cancer o immune issues<br>15+ milyon ang gumagamit ng HemoHim sa buong mundo – pati si Atomy Chairman ay gumaling mula sa liver cancer gamit ito.<br><strong>Umorder ng 1 kahon bago mag-May 31 at makakuha ng $100 hotel voucher (valid sa 50 lungsod sa China)</strong>",
+      id: "29–31 Mei 2025 <b>Flash Promo</b>: Untuk pejuang kanker & masalah imun<br>15+ juta pengguna global HemoHim – bahkan Chairman Atomy pun pulih dari kanker hati stadium akhir berkat HemoHim.<br><strong>Pesan 1 kotak sebelum 31 Mei & dapatkan voucher hotel $100 (berlaku di 50 kota China)</strong>"
+    };
+
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name) || '';
+    }
+    function detectLang() {
+      let lang = (getParam('lang') || navigator.language || 'en').toLowerCase();
+      if (lang.startsWith('zh')) {
+        lang = lang.includes('tw') || lang.includes('hant') ? 'zh_tw' : 'zh_cn';
+      }
+      if (lang.startsWith('fil')) lang = 'fil';
+      if (lang.startsWith('es')) lang = 'es';
+      if (lang.startsWith('pt')) lang = 'pt';
+      if (lang.startsWith('de')) lang = 'de';
+      if (lang.startsWith('fr')) lang = 'fr';
+      if (lang.startsWith('ru')) lang = 'ru';
+      if (lang.startsWith('th')) lang = 'th';
+      if (lang.startsWith('id')) lang = 'id';
+      if (!promos[lang]) lang = 'en';
+      return lang;
+    }
+    let currentLang = detectLang();
+    document.getElementById('promo-msg').innerHTML = promos[currentLang];
+    document.getElementById('langsel').value = currentLang;
+    document.getElementById('langsel').onchange = function() {
+      let lang = this.value;
+      document.getElementById('promo-msg').innerHTML = promos[lang];
+      const url = new URL(window.location.href);
+      url.searchParams.set('lang', lang);
+      window.history.replaceState({}, '', url);
+    };
+  </script>
+</body>
+</html>

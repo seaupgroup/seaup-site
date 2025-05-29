@@ -2,67 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voucher Success</title>
+  <title>Voucher Redeemed Successfully</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f6f9ff; color: #333; padding: 2rem; }
-    .lang-block { display: none; margin: 1.5rem 0; }
-    h1 { color: #0d6efd; }
+    body { font-family: Arial, "Noto Sans TC", "Noto Sans SC", "Microsoft JhengHei", sans-serif; margin: 60px; font-size: 1.2em; }
+    .info { margin: 30px 0; }
   </style>
 </head>
 <body>
-  <h1 id="title"></h1>
-  <div id="lang-content">
-    <div class="lang-block" data-lang="en">
-      <p>Success! Your voucher code is:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="zh-Hant">
-      <p>兌換成功！您的住宿券代碼為：</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="zh-Hans">
-      <p>兑换成功！您的住宿券代码为：</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="ru">
-      <p>Успешно! Ваш код ваучера:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="de">
-      <p>Erfolgreich! Ihr Gutscheincode lautet:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="fr">
-      <p>Succès ! Votre code de bon est :</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="es">
-      <p>¡Éxito! Su código de vale es:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="pt">
-      <p>Sucesso! Seu código do voucher é:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="id">
-      <p>Berhasil! Kode voucher Anda adalah:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="th">
-      <p>สำเร็จ! รหัสเวาเชอร์ของคุณคือ:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
-    <div class="lang-block" data-lang="tl">
-      <p>Tagumpay! Ang iyong voucher code ay:</p>
-      <p><strong>{voucher_code}</strong></p>
-    </div>
+  <h2 id="title"></h2>
+  <div class="info">
+    <p id="member_line"></p>
+    <p id="voucher_line"></p>
+    <p id="contact_line"></p>
   </div>
+  <a id="home_link" href="/"></a>
   <script>
-    const lang = new URLSearchParams(window.location.search).get('lang') || 'en';
-    document.querySelectorAll('.lang-block').forEach(el => {
-      if (el.dataset.lang === lang) el.style.display = 'block';
-    });
+    function getParam(param) {
+      let url = new URL(window.location.href);
+      return url.searchParams.get(param) || '';
+    }
+    // 多語字典
+    const langPacks = {
+      en: {
+        title: "Congratulations! Your accommodation voucher has been redeemed.",
+        member_line: "Your member number is: ",
+        voucher_line: "Your voucher code is: ",
+        contact_line: "The accommodation team will contact you soon.",
+        home: "Back to Homepage"
+      },
+      zh_tw: {
+        title: "恭喜！您的住宿券已成功兌換。",
+        member_line: "您的會員編號為：",
+        voucher_line: "您的住宿券代碼為：",
+        contact_line: "客服人員將會與您聯繫。",
+        home: "回首頁"
+      },
+      zh_cn: {
+        title: "恭喜！您的住宿券已成功兑换。",
+        member_line: "您的会员编号为：",
+        voucher_line: "您的住宿券代码为：",
+        contact_line: "客服人员将会与您联系。",
+        home: "回首页"
+      },
+      fr: {
+        title: "Félicitations ! Votre bon d’hébergement a été validé.",
+        member_line: "Votre numéro de membre : ",
+        voucher_line: "Votre code de bon : ",
+        contact_line: "L’équipe d’hébergement vous contactera bientôt.",
+        home: "Retour à l’accueil"
+      },
+      de: {
+        title: "Herzlichen Glückwunsch! Ihr Unterkunftsgutschein wurde eingelöst.",
+        member_line: "Ihre Mitgliedsnummer: ",
+        voucher_line: "Ihr Gutscheincode: ",
+        contact_line: "Das Unterkunftsteam wird Sie bald kontaktieren.",
+        home: "Zurück zur Startseite"
+      },
+      ru: {
+        title: "Поздравляем! Ваш ваучер на проживание успешно активирован.",
+        member_line: "Ваш номер участника: ",
+        voucher_line: "Ваш код ваучера: ",
+        contact_line: "С вами скоро свяжется команда по размещению.",
+        home: "Вернуться на главную"
+      },
+      th: {
+        title: "ขอแสดงความยินดี! คุณได้แลกคูปองที่พักเรียบร้อยแล้ว",
+        member_line: "หมายเลขสมาชิกของคุณคือ: ",
+        voucher_line: "รหัสคูปองของคุณคือ: ",
+        contact_line: "ทีมที่พักจะติดต่อคุณเร็วๆ นี้",
+        home: "กลับสู่หน้าหลัก"
+      },
+      es: {
+        title: "¡Felicidades! Su cupón de alojamiento ha sido canjeado.",
+        member_line: "Su número de miembro es: ",
+        voucher_line: "Su código de cupón es: ",
+        contact_line: "El equipo de alojamiento se pondrá en contacto con usted pronto.",
+        home: "Volver a la página principal"
+      },
+      pt: {
+        title: "Parabéns! Seu voucher de acomodação foi resgatado.",
+        member_line: "Seu número de membro é: ",
+        voucher_line: "Seu código do voucher é: ",
+        contact_line: "A equipe de acomodação entrará em contato em breve.",
+        home: "Voltar à página inicial"
+      },
+      fil: {
+        title: "Binabati ka! Matagumpay na na-redeem ang iyong accommodation voucher.",
+        member_line: "Ang iyong member number ay: ",
+        voucher_line: "Ang iyong voucher code ay: ",
+        contact_line: "Makikipag-ugnayan sa iyo ang accommodation team.",
+        home: "Bumalik sa Homepage"
+      },
+      id: {
+        title: "Selamat! Voucher akomodasi Anda telah berhasil ditukarkan.",
+        member_line: "Nomor member Anda: ",
+        voucher_line: "Kode voucher Anda: ",
+        contact_line: "Tim akomodasi akan segera menghubungi Anda.",
+        home: "Kembali ke Beranda"
+      }
+    };
+
+    // 自動偵測語言
+    let lang = (getParam('lang') || 'en').toLowerCase();
+    if (lang.startsWith('zh')) {
+      lang = lang.includes('tw') || lang.includes('hant') ? 'zh_tw' : 'zh_cn';
+    }
+    if (lang.startsWith('fil')) lang = 'fil';
+    if (lang.startsWith('es')) lang = 'es';
+    if (lang.startsWith('pt')) lang = 'pt';
+    if (lang.startsWith('de')) lang = 'de';
+    if (lang.startsWith('fr')) lang = 'fr';
+    if (lang.startsWith('ru')) lang = 'ru';
+    if (lang.startsWith('th')) lang = 'th';
+    if (lang.startsWith('id')) lang = 'id';
+    if (!langPacks[lang]) lang = 'en';
+    let pack = langPacks[lang];
+
+    // 注入內容
+    document.getElementById('title').textContent = pack.title;
+    document.getElementById('member_line').textContent = pack.member_line + getParam('member_number');
+    document.getElementById('voucher_line').textContent = pack.voucher_line + getParam('voucher_code');
+    document.getElementById('contact_line').textContent = pack.contact_line;
+    document.getElementById('home_link').textContent = pack.home;
   </script>
 </body>
 </html>
