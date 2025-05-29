@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: Arial, "Noto Sans TC", "Noto Sans SC", "Microsoft JhengHei", sans-serif; background: #f8fafc; margin: 0; padding: 0; }
-    .main { max-width: 440px; margin: 44px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px #eee; padding: 28px; }
+    .main { max-width: 440px; margin: 44px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 16px #eee; padding: 28px; }
     .main h2 { color: #ea4a2b; margin-bottom: 16px; }
     .main label { font-weight: bold; display: block; margin-top: 17px; }
     select, button { width: 100%; font-size: 1em; margin-top: 7px; padding: 8px; border-radius: 8px; border: 1px solid #d4d4d4; }
@@ -15,13 +15,15 @@
     .msg { margin-top: 24px; color: #d5371b; font-weight: bold; min-height: 32px;}
     .lang-sel { text-align:right; margin-bottom: 6px;}
     .lang-sel select {width:auto;}
+    .redeem { margin-top:32px; text-align:center; font-size:1em;}
+    .redeem a { color:#ea4a2b; text-decoration:underline; }
   </style>
 </head>
 <body>
   <div class="main">
     <div class="lang-sel">
-      <label style="font-size:1em;font-weight:bold;">🌐</label>
-      <select id="uiLangSel" onchange="setUILang(this.value)">
+      <label style="font-size:1em;font-weight:bold;" for="uiLangSel">🌐</label>
+      <select id="uiLangSel">
         <option value="en">English</option>
         <option value="zh_tw">繁體中文</option>
         <option value="zh_cn">简体中文</option>
@@ -42,8 +44,8 @@
     <select id="langInput"></select>
     <button id="submitBtn" onclick="getCodeAndRedirect()">Get Member Number</button>
     <div id="msg" class="msg"></div>
-    <div style="margin-top:30px;text-align:center;">
-      <a id="redeemLink" href="https://form.jotform.com/251414756620050" target="_blank" style="color:#ea4a2b; text-decoration:underline; font-size:1em;">住宿券兌換表單 / Redeem Voucher</a>
+    <div class="redeem">
+      <a id="redeemLink" href="https://form.jotform.com/251414756620050" target="_blank">住宿券兌換表單 / Redeem Voucher</a>
     </div>
   </div>
   <script>
@@ -156,6 +158,7 @@
       {val:"id", label: {en:"Bahasa Indonesia", zh_tw:"印尼文", zh_cn:"印尼语", fr:"Indonésien", de:"Indonesisch", ru:"Индонезийский", th:"อินโดนีเซีย", es:"Indonesio", pt:"Indonésio", fil:"Indonesian", id:"Bahasa Indonesia"}}
     ];
 
+    // ---- 選單初始化與語言切換 ----
     function setUILang(lang) {
       // 標題與標籤
       document.getElementById('ui_title').textContent = texts.ui_title[lang];
@@ -168,7 +171,7 @@
       rSel.innerHTML = '';
       regions.forEach(opt => {
         let o = document.createElement('option');
-        o.value = opt[lang] || opt.en;
+        o.value = opt.en;
         o.text = opt[lang] || opt.en;
         rSel.appendChild(o);
       });
@@ -184,14 +187,35 @@
       });
     }
 
-    // 初始化
-    let defaultLang = (navigator.language || '').toLowerCase();
-    if (defaultLang.startsWith('zh') && defaultLang.includes('tw')) defaultLang = 'zh_tw';
-    else if (defaultLang.startsWith('zh')) defaultLang = 'zh_cn';
-    else if (!uiLangs.includes(defaultLang)) defaultLang = 'en';
-    setUILang(defaultLang);
-    document.getElementById('uiLangSel').value = defaultLang;
+    // 頁面初始自動判斷語言
+    function detectBrowserLang() {
+      let blang = (navigator.language || '').toLowerCase();
+      if (blang.startsWith('zh') && blang.includes('tw')) return 'zh_tw';
+      if (blang.startsWith('zh')) return 'zh_cn';
+      if (blang.startsWith('fr')) return 'fr';
+      if (blang.startsWith('de')) return 'de';
+      if (blang.startsWith('ru')) return 'ru';
+      if (blang.startsWith('th')) return 'th';
+      if (blang.startsWith('es')) return 'es';
+      if (blang.startsWith('pt')) return 'pt';
+      if (blang.startsWith('fil') || blang.startsWith('tl')) return 'fil';
+      if (blang.startsWith('id')) return 'id';
+      return 'en';
+    }
 
+    // 初始化流程
+    window.addEventListener("DOMContentLoaded", function() {
+      let uiLang = detectBrowserLang();
+      document.getElementById('uiLangSel').value = uiLang;
+      setUILang(uiLang);
+
+      // 語言選單切換
+      document.getElementById('uiLangSel').addEventListener('change', function() {
+        setUILang(this.value);
+      });
+    });
+
+    // ---- 提交分配會員編號，導向 jotform ----
     async function getCodeAndRedirect() {
       const region = document.getElementById('regionInput').value;
       const lang = document.getElementById('langInput').value;
@@ -216,4 +240,12 @@
           return;
         }
         // 組成 JotForm 預填網址
-        const jotformUrl = `https://form.jotform.com/251412432618046?member_number=${encodeURIComponent(data.member_number)}&password=${encodeURIComponent(data.password)}&website=${encodeURIComponent(data.official_website)}&lang
+        const jotformUrl = `https://form.jotform.com/251412432618046?member_number=${encodeURIComponent(data.member_number)}&password=${encodeURIComponent(data.password)}&website=${encodeURIComponent(data.official_website)}&lang=${encodeURIComponent(lang)}`;
+        window.location.href = jotformUrl;
+      } catch(e) {
+        msgDiv.textContent = texts.msg_fail[uiLang];
+      }
+    }
+  </script>
+</body>
+</html>
