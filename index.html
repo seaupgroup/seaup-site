@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font-family: Arial, "Noto Sans TC", "Noto Sans SC", "Microsoft JhengHei", sans-serif; background: #f8fafc; margin: 0; padding: 0; }
-    .main { max-width: 440px; margin: 44px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 16px #eee; padding: 28px; }
+    .main { max-width: 480px; margin: 44px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 16px #eee; padding: 28px; }
     .main h2 { color: #ea4a2b; margin-bottom: 16px; }
     .main label { font-weight: bold; display: block; margin-top: 17px; }
     select, button { width: 100%; font-size: 1em; margin-top: 7px; padding: 8px; border-radius: 8px; border: 1px solid #d4d4d4; }
@@ -23,19 +23,7 @@
   <div class="main">
     <div class="lang-sel">
       <label style="font-size:1em;font-weight:bold;" for="uiLangSel">🌐</label>
-      <select id="uiLangSel">
-        <option value="en">English</option>
-        <option value="zh_tw">繁體中文</option>
-        <option value="zh_cn">简体中文</option>
-        <option value="fr">Français</option>
-        <option value="de">Deutsch</option>
-        <option value="ru">Русский</option>
-        <option value="th">ไทย</option>
-        <option value="es">Español</option>
-        <option value="pt">Português</option>
-        <option value="fil">Filipino</option>
-        <option value="id">Bahasa Indonesia</option>
-      </select>
+      <select id="uiLangSel"></select>
     </div>
     <h2 id="ui_title">Atomy HemoHIM Member Registration</h2>
     <label for="regionInput" id="ui_region_label">Region</label>
@@ -49,200 +37,212 @@
     </div>
   </div>
   <script>
-    // 多語文本設定
+    // 11語言清單
     const uiLangs = ["en","zh_tw","zh_cn","fr","de","ru","th","es","pt","fil","id"];
+    // 52地區 11語翻譯
+    const regions = [
+      {en:"Australia",      zh_tw:"澳洲",    zh_cn:"澳大利亚",  fr:"Australie",     de:"Australien",     ru:"Австралия",     th:"ออสเตรเลีย",    es:"Australia",      pt:"Austrália",      fil:"Australia",     id:"Australia"},
+      {en:"Austria",        zh_tw:"奧地利",  zh_cn:"奥地利",    fr:"Autriche",      de:"Österreich",     ru:"Австрия",       th:"ออสเตรีย",      es:"Austria",        pt:"Áustria",        fil:"Austria",       id:"Austria"},
+      {en:"Belarus",        zh_tw:"白俄羅斯", zh_cn:"白俄罗斯",  fr:"Biélorussie",   de:"Weißrussland",   ru:"Беларусь",      th:"เบลารุส",        es:"Bielorrusia",    pt:"Bielorrússia",   fil:"Belarus",       id:"Belarus"},
+      {en:"Belgium",        zh_tw:"比利時",  zh_cn:"比利时",    fr:"Belgique",      de:"Belgien",        ru:"Бельгия",       th:"เบลเยียม",       es:"Bélgica",        pt:"Bélgica",        fil:"Belgium",       id:"Belgia"},
+      {en:"Bulgaria",       zh_tw:"保加利亞", zh_cn:"保加利亚",  fr:"Bulgarie",      de:"Bulgarien",      ru:"Болгария",      th:"บัลแกเรีย",       es:"Bulgaria",       pt:"Bulgária",       fil:"Bulgaria",      id:"Bulgaria"},
+      {en:"Cambodia",       zh_tw:"柬埔寨",  zh_cn:"柬埔寨",    fr:"Cambodge",      de:"Kambodscha",     ru:"Камбоджа",      th:"กัมพูชา",         es:"Camboya",        pt:"Camboja",        fil:"Cambodia",      id:"Kamboja"},
+      {en:"Canada",         zh_tw:"加拿大",  zh_cn:"加拿大",    fr:"Canada",         de:"Kanada",         ru:"Канада",        th:"แคนาดา",          es:"Canadá",         pt:"Canadá",         fil:"Canada",        id:"Kanada"},
+      {en:"Colombia",       zh_tw:"哥倫比亞", zh_cn:"哥伦比亚",  fr:"Colombie",      de:"Kolumbien",      ru:"Колумбия",      th:"โคลอมเบีย",       es:"Colombia",       pt:"Colômbia",       fil:"Colombia",      id:"Kolombia"},
+      {en:"Croatia",        zh_tw:"克羅埃西亞", zh_cn:"克罗地亚", fr:"Croatie",      de:"Kroatien",       ru:"Хорватия",      th:"โครเอเชีย",       es:"Croacia",        pt:"Croácia",        fil:"Croatia",       id:"Kroasia"},
+      {en:"Cyprus",         zh_tw:"賽普勒斯", zh_cn:"塞浦路斯",   fr:"Chypre",        de:"Zypern",         ru:"Кипр",          th:"ไซปรัส",          es:"Chipre",         pt:"Chipre",         fil:"Cyprus",        id:"Siprus"},
+      {en:"Czech Republic", zh_tw:"捷克",    zh_cn:"捷克",      fr:"République tchèque", de:"Tschechien", ru:"Чехия",         th:"สาธารณรัฐเช็ก",   es:"República Checa", pt:"República Tcheca", fil:"Czech Republic", id:"Republik Ceko"},
+      {en:"Denmark",        zh_tw:"丹麥",    zh_cn:"丹麦",      fr:"Danemark",       de:"Dänemark",       ru:"Дания",         th:"เดนมาร์ก",        es:"Dinamarca",      pt:"Dinamarca",      fil:"Denmark",       id:"Denmark"},
+      {en:"Estonia",        zh_tw:"愛沙尼亞", zh_cn:"爱沙尼亚",  fr:"Estonie",       de:"Estland",        ru:"Эстония",       th:"เอสโตเนีย",       es:"Estonia",        pt:"Estónia",        fil:"Estonia",       id:"Estonia"},
+      {en:"Finland",        zh_tw:"芬蘭",    zh_cn:"芬兰",      fr:"Finlande",       de:"Finnland",       ru:"Финляндия",     th:"ฟินแลนด์",        es:"Finlandia",      pt:"Finlândia",      fil:"Finland",       id:"Finlandia"},
+      {en:"France",         zh_tw:"法國",    zh_cn:"法国",      fr:"France",         de:"Frankreich",     ru:"Франция",       th:"ฝรั่งเศส",        es:"Francia",        pt:"França",         fil:"France",        id:"Perancis"},
+      {en:"Germany",        zh_tw:"德國",    zh_cn:"德国",      fr:"Allemagne",      de:"Deutschland",    ru:"Германия",      th:"เยอรมนี",         es:"Alemania",       pt:"Alemanha",       fil:"Germany",       id:"Jerman"},
+      {en:"Greece",         zh_tw:"希臘",    zh_cn:"希腊",      fr:"Grèce",          de:"Griechenland",   ru:"Греция",        th:"กรีซ",            es:"Grecia",         pt:"Grécia",         fil:"Greece",        id:"Yunani"},
+      {en:"Hungary",        zh_tw:"匈牙利",  zh_cn:"匈牙利",    fr:"Hongrie",        de:"Ungarn",         ru:"Венгрия",       th:"ฮังการี",          es:"Hungría",        pt:"Hungria",        fil:"Hungary",       id:"Hungaria"},
+      {en:"Iceland",        zh_tw:"冰島",    zh_cn:"冰岛",      fr:"Islande",        de:"Island",         ru:"Исландия",      th:"ไอซ์แลนด์",        es:"Islandia",       pt:"Islândia",       fil:"Iceland",       id:"Islandia"},
+      {en:"Indonesia",      zh_tw:"印尼",    zh_cn:"印尼",      fr:"Indonésie",      de:"Indonesien",     ru:"Индонезия",     th:"อินโดนีเซีย",      es:"Indonesia",      pt:"Indonésia",      fil:"Indonesia",     id:"Indonesia"},
+      {en:"Ireland",        zh_tw:"愛爾蘭",  zh_cn:"爱尔兰",    fr:"Irlande",        de:"Irland",         ru:"Ирландия",      th:"ไอร์แลนด์",         es:"Irlanda",        pt:"Irlanda",        fil:"Ireland",       id:"Irlandia"},
+      {en:"Italy",          zh_tw:"義大利",  zh_cn:"意大利",    fr:"Italie",         de:"Italien",        ru:"Италия",        th:"อิตาลี",           es:"Italia",         pt:"Itália",         fil:"Italy",         id:"Italia"},
+      {en:"Kazakhstan",     zh_tw:"哈薩克",  zh_cn:"哈萨克",    fr:"Kazakhstan",     de:"Kasachstan",     ru:"Казахстан",     th:"คาซัคสถาน",        es:"Kazajistán",     pt:"Cazaquistão",    fil:"Kazakhstan",    id:"Kazakhstan"},
+      {en:"Kyrgyzstan",     zh_tw:"吉爾吉斯", zh_cn:"吉尔吉斯", fr:"Kirghizistan",   de:"Kirgisistan",    ru:"Киргизия",      th:"คีร์กีซสถาน",      es:"Kirguistán",     pt:"Quirguistão",    fil:"Kyrgyzstan",    id:"Kirgizstan"},
+      {en:"Latvia",         zh_tw:"拉脫維亞", zh_cn:"拉脱维亚",  fr:"Lettonie",       de:"Lettland",       ru:"Латвия",        th:"ลัตเวีย",           es:"Letonia",        pt:"Letônia",        fil:"Latvia",        id:"Latvia"},
+      {en:"Liechtenstein",  zh_tw:"列支敦士登", zh_cn:"列支敦士登", fr:"Liechtenstein", de:"Liechtenstein", ru:"Лихтенштейн",   th:"ลิกเตนสไตน์",      es:"Liechtenstein",  pt:"Liechtenstein",  fil:"Liechtenstein", id:"Liechtenstein"},
+      {en:"Lithuania",      zh_tw:"立陶宛",  zh_cn:"立陶宛",    fr:"Lituanie",       de:"Litauen",        ru:"Литва",         th:"ลิทัวเนีย",        es:"Lituania",       pt:"Lituânia",       fil:"Lithuania",     id:"Lituania"},
+      {en:"Luxembourg",     zh_tw:"盧森堡",  zh_cn:"卢森堡",    fr:"Luxembourg",     de:"Luxemburg",      ru:"Люксембург",    th:"ลักเซมเบิร์ก",      es:"Luxemburgo",     pt:"Luxemburgo",     fil:"Luxembourg",    id:"Luksemburg"},
+      {en:"Malaysia",       zh_tw:"馬來西亞", zh_cn:"马来西亚",  fr:"Malaisie",       de:"Malaysia",       ru:"Малайзия",      th:"มาเลเซีย",         es:"Malasia",        pt:"Malásia",        fil:"Malaysia",      id:"Malaysia"},
+      {en:"Malta",          zh_tw:"馬耳他",  zh_cn:"马耳他",    fr:"Malte",          de:"Malta",          ru:"Мальта",        th:"มอลตา",            es:"Malta",          pt:"Malta",          fil:"Malta",         id:"Malta"},
+      {en:"Mexico",         zh_tw:"墨西哥",  zh_cn:"墨西哥",    fr:"Mexique",        de:"Mexiko",         ru:"Мексика",       th:"เม็กซิโก",         es:"México",         pt:"México",         fil:"Mexico",        id:"Meksiko"},
+      {en:"Monaco",         zh_tw:"摩納哥",  zh_cn:"摩纳哥",    fr:"Monaco",         de:"Monaco",         ru:"Монако",        th:"โมนาโก",           es:"Mónaco",         pt:"Mônaco",         fil:"Monaco",        id:"Monako"},
+      {en:"Mongolia",       zh_tw:"蒙古",    zh_cn:"蒙古",      fr:"Mongolie",       de:"Mongolei",       ru:"Монголия",      th:"มองโกเลีย",        es:"Mongolia",       pt:"Mongólia",       fil:"Mongolia",      id:"Mongolia"},
+      {en:"Netherlands",    zh_tw:"荷蘭",    zh_cn:"荷兰",      fr:"Pays-Bas",       de:"Niederlande",    ru:"Нидерланды",    th:"เนเธอร์แลนด์",      es:"Países Bajos",   pt:"Países Baixos",  fil:"Netherlands",   id:"Belanda"},
+      {en:"New Zealand",    zh_tw:"紐西蘭",  zh_cn:"新西兰",    fr:"Nouvelle-Zélande",de:"Neuseeland",    ru:"Новая Зеландия",th:"นิวซีแลนด์",       es:"Nueva Zelanda",  pt:"Nova Zelândia",  fil:"New Zealand",   id:"Selandia Baru"},
+      {en:"Norway",         zh_tw:"挪威",    zh_cn:"挪威",      fr:"Norvège",        de:"Norwegen",       ru:"Норвегия",      th:"นอร์เวย์",         es:"Noruega",        pt:"Noruega",        fil:"Norway",        id:"Norwegia"},
+      {en:"Philippines",    zh_tw:"菲律賓",  zh_cn:"菲律宾",    fr:"Philippines",    de:"Philippinen",    ru:"Филиппины",     th:"ฟิลิปปินส์",        es:"Filipinas",      pt:"Filipinas",      fil:"Pilipinas",     id:"Filipina"},
+      {en:"Poland",         zh_tw:"波蘭",    zh_cn:"波兰",      fr:"Pologne",        de:"Polen",          ru:"Польша",        th:"โปแลนด์",           es:"Polonia",        pt:"Polônia",        fil:"Poland",        id:"Polandia"},
+      {en:"Portugal",       zh_tw:"葡萄牙",  zh_cn:"葡萄牙",    fr:"Portugal",       de:"Portugal",       ru:"Португалия",    th:"โปรตุเกส",          es:"Portugal",       pt:"Portugal",       fil:"Portugal",      id:"Portugal"},
+      {en:"Romania",        zh_tw:"羅馬尼亞", zh_cn:"罗马尼亚",  fr:"Roumanie",       de:"Rumänien",       ru:"Румыния",       th:"โรมาเนีย",         es:"Rumanía",        pt:"Romênia",        fil:"Romania",       id:"Rumania"},
+      {en:"Russia",         zh_tw:"俄羅斯",  zh_cn:"俄罗斯",    fr:"Russie",         de:"Russland",       ru:"Россия",        th:"รัสเซีย",           es:"Rusia",          pt:"Rússia",         fil:"Russia",        id:"Rusia"},
+      {en:"Singapore",      zh_tw:"新加坡",  zh_cn:"新加坡",    fr:"Singapour",      de:"Singapur",       ru:"Сингапур",      th:"สิงคโปร์",          es:"Singapur",       pt:"Singapura",      fil:"Singapore",     id:"Singapura"},
+      {en:"Slovakia",       zh_tw:"斯洛伐克", zh_cn:"斯洛伐克",  fr:"Slovaquie",      de:"Slowakei",       ru:"Словакия",      th:"สโลวาเกีย",         es:"Eslovaquia",     pt:"Eslováquia",     fil:"Slovakia",      id:"Slovakia"},
+      {en:"Slovenia",       zh_tw:"斯洛維尼亞", zh_cn:"斯洛文尼亚",fr:"Slovénie",    de:"Slowenien",      ru:"Словения",      th:"สโลวีเนีย",         es:"Eslovenia",      pt:"Eslovênia",      fil:"Slovenia",      id:"Slovenia"},
+      {en:"Spain",          zh_tw:"西班牙",  zh_cn:"西班牙",    fr:"Espagne",        de:"Spanien",        ru:"Испания",       th:"สเปน",              es:"España",         pt:"Espanha",        fil:"Spain",         id:"Spanyol"},
+      {en:"Sweden",         zh_tw:"瑞典",    zh_cn:"瑞典",      fr:"Suède",          de:"Schweden",       ru:"Швеция",        th:"สวีเดน",            es:"Suecia",         pt:"Suécia",         fil:"Sweden",        id:"Swedia"},
+      {en:"Switzerland",    zh_tw:"瑞士",    zh_cn:"瑞士",      fr:"Suisse",         de:"Schweiz",        ru:"Швейцария",     th:"สวิตเซอร์แลนด์",     es:"Suiza",          pt:"Suíça",          fil:"Switzerland",   id:"Swiss"},
+      {en:"Taiwan",         zh_tw:"台灣",    zh_cn:"台湾",      fr:"Taïwan",         de:"Taiwan",         ru:"Тайвань",       th:"ไต้หวัน",           es:"Taiwán",         pt:"Taiwan",         fil:"Taiwan",        id:"Taiwan"},
+      {en:"Thailand",       zh_tw:"泰國",    zh_cn:"泰国",      fr:"Thaïlande",      de:"Thailand",       ru:"Таиланд",       th:"ประเทศไทย",          es:"Tailandia",      pt:"Tailândia",      fil:"Thailand",      id:"Thailand"},
+      {en:"United Kingdom", zh_tw:"英國",    zh_cn:"英国",      fr:"Royaume-Uni",    de:"Vereinigtes Königreich", ru:"Великобритания", th:"สหราชอาณาจักร", es:"Reino Unido", pt:"Reino Unido", fil:"United Kingdom", id:"Inggris Raya"},
+      {en:"United States",  zh_tw:"美國",    zh_cn:"美国",      fr:"États-Unis",     de:"Vereinigte Staaten",     ru:"США",          th:"สหรัฐอเมริกา",      es:"Estados Unidos", pt:"Estados Unidos", fil:"United States", id:"Amerika Serikat"},
+      {en:"Uzbekistan",     zh_tw:"烏茲別克", zh_cn:"乌兹别克",  fr:"Ouzbékistan",    de:"Usbekistan",     ru:"Узбекистан",     th:"อุซเบกิสถาน",        es:"Uzbekistán",     pt:"Uzbequistão",    fil:"Uzbekistan",    id:"Uzbekistan"}
+    ];
+
+    // 各語言用詞
     const texts = {
-      ui_title: {
+      title: {
         en: "Atomy HemoHIM Member Registration",
-        zh_tw: "Atomy HemoHIM 會員編號領取",
-        zh_cn: "Atomy HemoHIM 会员编号领取",
+        zh_tw: "Atomy HemoHIM 會員申請",
+        zh_cn: "Atomy HemoHIM 会员申请",
         fr: "Inscription Membre Atomy HemoHIM",
-        de: "Atomy HemoHIM Mitgliederanmeldung",
+        de: "Atomy HemoHIM Mitgliedsanmeldung",
         ru: "Регистрация участника Atomy HemoHIM",
-        th: "ลงทะเบียนรับรหัสสมาชิก Atomy HemoHIM",
+        th: "ลงทะเบียนสมาชิก Atomy HemoHIM",
         es: "Registro de Miembro Atomy HemoHIM",
-        pt: "Registro de Membro Atomy HemoHIM",
-        fil: "Atomy HemoHIM Member Registration",
+        pt: "Cadastro de Membro Atomy HemoHIM",
+        fil: "Atomy HemoHIM Pagpaparehistro",
         id: "Pendaftaran Anggota Atomy HemoHIM"
       },
-      ui_region_label: {
-        en:"Region", zh_tw:"地區", zh_cn:"地区", fr:"Région", de:"Region", ru:"Регион", th:"ภูมิภาค", es:"Región", pt:"Região", fil:"Rehiyon", id:"Wilayah"
+      region: {
+        en: "Region", zh_tw:"地區", zh_cn:"地区", fr:"Région", de:"Region", ru:"Регион", th:"ภูมิภาค", es:"Región", pt:"Região", fil:"Reh
+      region: {
+        en: "Region", zh_tw:"地區", zh_cn:"地区", fr:"Région", de:"Region", ru:"Регион", th:"ภูมิภาค", es:"Región", pt:"Região", fil:"Rehiyon", id:"Wilayah"
       },
-      ui_lang_label: {
-        en:"Language", zh_tw:"語言", zh_cn:"语言", fr:"Langue", de:"Sprache", ru:"Язык", th:"ภาษา", es:"Idioma", pt:"Idioma", fil:"Wika", id:"Bahasa"
+      language: {
+        en: "Language", zh_tw:"語言", zh_cn:"语言", fr:"Langue", de:"Sprache", ru:"Язык", th:"ภาษา", es:"Idioma", pt:"Idioma", fil:"Wika", id:"Bahasa"
       },
-      submitBtn: {
-        en:"Get Member Number", zh_tw:"領取會員編號", zh_cn:"领取会员编号", fr:"Obtenir un numéro de membre", de:"Mitgliedsnummer erhalten", ru:"Получить номер участника", th:"รับรหัสสมาชิก", es:"Obtener número de miembro", pt:"Obter número de membro", fil:"Kunin ang Member Number", id:"Dapatkan Nomor Anggota"
+      btn: {
+        en:"Get Member Number", zh_tw:"領取會員編號", zh_cn:"领取会员编号", fr:"Obtenir le numéro de membre", de:"Mitgliedsnummer erhalten", ru:"Получить номер участника", th:"รับหมายเลขสมาชิก", es:"Obtener número de miembro", pt:"Obter número de membro", fil:"Kunin ang Member Number", id:"Dapatkan Nomor Member"
+      },
+      redeem: {
+        en:"Redeem Voucher", zh_tw:"兌換住宿券", zh_cn:"兑换住宿券", fr:"Échanger le bon", de:"Gutschein einlösen", ru:"Активировать ваучер", th:"แลกรับบัตรกำนัล", es:"Canjear cupón", pt:"Resgatar voucher", fil:"I-redeem ang Voucher", id:"Tukar Voucher"
       },
       msg_choose: {
-        en:"Please select region and language.",
-        zh_tw:"請選擇地區與語言。",
-        zh_cn:"请选择地区与语言。",
-        fr:"Veuillez choisir une région et une langue.",
-        de:"Bitte wählen Sie Region und Sprache.",
-        ru:"Пожалуйста, выберите регион и язык.",
-        th:"กรุณาเลือกภูมิภาคและภาษา",
-        es:"Por favor seleccione región e idioma.",
-        pt:"Por favor, selecione região e idioma.",
-        fil:"Paki pili ng rehiyon at wika.",
-        id:"Silakan pilih wilayah dan bahasa."
+        en:"Please select region and language.", zh_tw:"請選擇地區與語言", zh_cn:"请选择地区与语言", fr:"Veuillez choisir une région et une langue.", de:"Bitte wählen Sie Region und Sprache.", ru:"Пожалуйста, выберите регион и язык.", th:"กรุณาเลือกภูมิภาคและภาษา", es:"Por favor seleccione región e idioma.", pt:"Por favor, selecione região e idioma.", fil:"Pumili ng rehiyon at wika.", id:"Silakan pilih wilayah dan bahasa."
       },
       msg_wait: {
-        en:"Please wait, assigning member number...",
-        zh_tw:"請稍候，正在分配會員編號...",
-        zh_cn:"请稍候，正在分配会员编号...",
-        fr:"Veuillez patienter, attribution du numéro...",
-        de:"Bitte warten, Mitgliedsnummer wird zugewiesen...",
-        ru:"Подождите, назначается номер участника...",
-        th:"กรุณารอสักครู่ กำลังจัดสรรรหัสสมาชิก...",
-        es:"Espere mientras se asigna el número...",
-        pt:"Por favor, aguarde enquanto atribuímos o número...",
-        fil:"Sandali lang, ina-assign ang member number...",
-        id:"Mohon tunggu, sedang menugaskan nomor anggota..."
-      },
-      msg_error: {
-        en:"Error: ",
-        zh_tw:"錯誤：",
-        zh_cn:"错误：",
-        fr:"Erreur : ",
-        de:"Fehler: ",
-        ru:"Ошибка: ",
-        th:"ข้อผิดพลาด: ",
-        es:"Error: ",
-        pt:"Erro: ",
-        fil:"Error: ",
-        id:"Kesalahan: "
+        en:"Please wait...", zh_tw:"請稍候...", zh_cn:"请稍候...", fr:"Veuillez patienter...", de:"Bitte warten...", ru:"Пожалуйста, подождите...", th:"กรุณารอสักครู่...", es:"Por favor espere...", pt:"Por favor, aguarde...", fil:"Pakiusap maghintay...", id:"Mohon tunggu..."
       },
       msg_fail: {
-        en:"API connection failed. Please try again.",
-        zh_tw:"API連線失敗，請稍後再試。",
-        zh_cn:"API连接失败，请稍后再试。",
-        fr:"Connexion API échouée. Veuillez réessayer.",
-        de:"API-Verbindung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-        ru:"Сбой соединения с API. Попробуйте позже.",
-        th:"การเชื่อมต่อ API ล้มเหลว กรุณาลองใหม่อีกครั้ง",
-        es:"Conexión API fallida. Inténtelo de nuevo.",
-        pt:"Falha na conexão API. Por favor, tente novamente.",
-        fil:"API connection failed. Pakisubukan muli.",
-        id:"Koneksi API gagal. Silakan coba lagi."
+        en:"API connection failed, please try again.", zh_tw:"API 連線失敗，請再試一次。", zh_cn:"API 连接失败，请重试。", fr:"Échec de connexion à l'API, veuillez réessayer.", de:"API-Verbindung fehlgeschlagen, bitte versuchen Sie es erneut.", ru:"Ошибка подключения к API, попробуйте еще раз.", th:"เชื่อมต่อ API ไม่สำเร็จ กรุณาลองใหม่", es:"La conexión API falló, intente nuevamente.", pt:"A conexão com a API falhou, tente novamente.", fil:"Nabigo ang koneksyon sa API, pakisubukang muli.", id:"Koneksi API gagal, silakan coba lagi."
+      },
+      msg_error: {
+        en:"Registration failed: ", zh_tw:"申請失敗：", zh_cn:"申请失败：", fr:"Échec de l'inscription : ", de:"Registrierung fehlgeschlagen: ", ru:"Ошибка регистрации: ", th:"สมัครไม่สำเร็จ: ", es:"Registro fallido: ", pt:"Falha no cadastro: ", fil:"Nabigo ang pagrerehistro: ", id:"Pendaftaran gagal: "
       }
     };
 
-    // 地區選單
-    const regions = [
-      {en:"Taiwan", zh_tw:"台灣", zh_cn:"台湾", fr:"Taïwan", de:"Taiwan", ru:"Тайвань", th:"ไต้หวัน", es:"Taiwán", pt:"Taiwan", fil:"Taiwan", id:"Taiwan"},
-      {en:"Hong Kong", zh_tw:"香港", zh_cn:"香港", fr:"Hong Kong", de:"Hongkong", ru:"Гонконг", th:"ฮ่องกง", es:"Hong Kong", pt:"Hong Kong", fil:"Hong Kong", id:"Hong Kong"},
-      {en:"Singapore", zh_tw:"新加坡", zh_cn:"新加坡", fr:"Singapour", de:"Singapur", ru:"Сингапур", th:"สิงคโปร์", es:"Singapur", pt:"Singapura", fil:"Singapore", id:"Singapura"},
-      {en:"Malaysia", zh_tw:"馬來西亞", zh_cn:"马来西亚", fr:"Malaisie", de:"Malaysia", ru:"Малайзия", th:"มาเลเซีย", es:"Malasia", pt:"Malásia", fil:"Malaysia", id:"Malaysia"},
-      {en:"Thailand", zh_tw:"泰國", zh_cn:"泰国", fr:"Thaïlande", de:"Thailand", ru:"Таиланд", th:"ประเทศไทย", es:"Tailandia", pt:"Tailândia", fil:"Thailand", id:"Thailand"},
-      {en:"France", zh_tw:"法國", zh_cn:"法国", fr:"France", de:"Frankreich", ru:"Франция", th:"ฝรั่งเศส", es:"Francia", pt:"França", fil:"France", id:"Perancis"},
-      {en:"Germany", zh_tw:"德國", zh_cn:"德国", fr:"Allemagne", de:"Deutschland", ru:"Германия", th:"เยอรมนี", es:"Alemania", pt:"Alemanha", fil:"Germany", id:"Jerman"},
-      {en:"Russia", zh_tw:"俄羅斯", zh_cn:"俄罗斯", fr:"Russie", de:"Russland", ru:"Россия", th:"รัสเซีย", es:"Rusia", pt:"Rússia", fil:"Russia", id:"Rusia"},
-      {en:"Philippines", zh_tw:"菲律賓", zh_cn:"菲律宾", fr:"Philippines", de:"Philippinen", ru:"Филиппины", th:"ฟิลิปปินส์", es:"Filipinas", pt:"Filipinas", fil:"Pilipinas", id:"Filipina"},
-      {en:"Indonesia", zh_tw:"印尼", zh_cn:"印尼", fr:"Indonésie", de:"Indonesien", ru:"Индонезия", th:"อินโดนีเซีย", es:"Indonesia", pt:"Indonésia", fil:"Indonesia", id:"Indonesia"},
-      {en:"Spain", zh_tw:"西班牙", zh_cn:"西班牙", fr:"Espagne", de:"Spanien", ru:"Испания", th:"สเปน", es:"España", pt:"Espanha", fil:"Spain", id:"Spanyol"}
-    ];
+    // 語言/地區下拉式
+    const uiLangSel = document.getElementById('uiLangSel');
+    const regionSel = document.getElementById('regionInput');
+    const langSel = document.getElementById('langInput');
+    const msgDiv = document.getElementById('msg');
+    const titleH2 = document.getElementById('ui_title');
+    const regionLabel = document.getElementById('ui_region_label');
+    const langLabel = document.getElementById('ui_lang_label');
+    const submitBtn = document.getElementById('submitBtn');
+    const redeemLink = document.getElementById('redeemLink');
 
-    // 語言選單
-    const langOptions = [
-      {val:"en", label: {en:"English", zh_tw:"英文", zh_cn:"英语", fr:"Anglais", de:"Englisch", ru:"Английский", th:"อังกฤษ", es:"Inglés", pt:"Inglês", fil:"Ingles", id:"Inggris"}},
-      {val:"zh_tw", label: {en:"Traditional Chinese", zh_tw:"繁體中文", zh_cn:"繁体中文", fr:"Chinois traditionnel", de:"Traditionelles Chinesisch", ru:"Традиционный китайский", th:"จีนตัวเต็ม", es:"Chino tradicional", pt:"Chinês tradicional", fil:"Tradisyonal na Chinese", id:"Chinese Tradisional"}},
-      {val:"zh_cn", label: {en:"Simplified Chinese", zh_tw:"簡體中文", zh_cn:"简体中文", fr:"Chinois simplifié", de:"Vereinfachtes Chinesisch", ru:"Упрощенный китайский", th:"จีนตัวย่อ", es:"Chino simplificado", pt:"Chinês simplificado", fil:"Simplified Chinese", id:"Chinese Sederhana"}},
-      {val:"fr", label: {en:"French", zh_tw:"法文", zh_cn:"法语", fr:"Français", de:"Französisch", ru:"Французский", th:"ฝรั่งเศส", es:"Francés", pt:"Francês", fil:"Pranses", id:"Perancis"}},
-      {val:"de", label: {en:"German", zh_tw:"德文", zh_cn:"德语", fr:"Allemand", de:"Deutsch", ru:"Немецкий", th:"เยอรมัน", es:"Alemán", pt:"Alemão", fil:"Aleman", id:"Jerman"}},
-      {val:"ru", label: {en:"Russian", zh_tw:"俄文", zh_cn:"俄语", fr:"Russe", de:"Russisch", ru:"Русский", th:"รัสเซีย", es:"Ruso", pt:"Russo", fil:"Ruso", id:"Rusia"}},
-      {val:"th", label: {en:"Thai", zh_tw:"泰文", zh_cn:"泰语", fr:"Thaï", de:"Thailändisch", ru:"Тайский", th:"ไทย", es:"Tailandés", pt:"Tailandês", fil:"Thai", id:"Thailand"}},
-      {val:"es", label: {en:"Spanish", zh_tw:"西班牙文", zh_cn:"西班牙语", fr:"Espagnol", de:"Spanisch", ru:"Испанский", th:"สเปน", es:"Español", pt:"Espanhol", fil:"Espanyol", id:"Spanyol"}},
-      {val:"pt", label: {en:"Portuguese", zh_tw:"葡萄牙文", zh_cn:"葡萄牙语", fr:"Portugais", de:"Portugiesisch", ru:"Португальский", th:"โปรตุเกส", es:"Portugués", pt:"Português", fil:"Portuges", id:"Portugis"}},
-      {val:"fil", label: {en:"Filipino", zh_tw:"菲律賓文", zh_cn:"菲律宾语", fr:"Philippin", de:"Filipino", ru:"Филиппинский", th:"ฟิลิปปินส์", es:"Filipino", pt:"Filipino", fil:"Filipino", id:"Filipino"}},
-      {val:"id", label: {en:"Bahasa Indonesia", zh_tw:"印尼文", zh_cn:"印尼语", fr:"Indonésien", de:"Indonesisch", ru:"Индонезийский", th:"อินโดนีเซีย", es:"Indonesio", pt:"Indonésio", fil:"Indonesian", id:"Bahasa Indonesia"}}
-    ];
+    // Jotform多語（用於帶入表單語言參數）
+    const jotformLangMap = {
+      en:"en", zh_tw:"zh-TW", zh_cn:"zh-CN", fr:"fr", de:"de", ru:"ru", th:"th", es:"es", pt:"pt", fil:"fil", id:"id"
+    };
 
-    // ---- 選單初始化與語言切換 ----
-    function setUILang(lang) {
-      // 標題與標籤
-      document.getElementById('ui_title').textContent = texts.ui_title[lang];
-      document.getElementById('ui_region_label').textContent = texts.ui_region_label[lang];
-      document.getElementById('ui_lang_label').textContent = texts.ui_lang_label[lang];
-      document.getElementById('submitBtn').textContent = texts.submitBtn[lang];
+    // 取得瀏覽器語言預設
+    function guessLang() {
+      const n = navigator.language || navigator.userLanguage || 'en';
+      if(n.startsWith('zh-TW')||n.startsWith('zh-HK')) return "zh_tw";
+      if(n.startsWith('zh')) return "zh_cn";
+      if(n.startsWith('fr')) return "fr";
+      if(n.startsWith('de')) return "de";
+      if(n.startsWith('ru')) return "ru";
+      if(n.startsWith('th')) return "th";
+      if(n.startsWith('es')) return "es";
+      if(n.startsWith('pt')) return "pt";
+      if(n.startsWith('fil')||n.startsWith('tl')) return "fil";
+      if(n.startsWith('id')) return "id";
+      return "en";
+    }
 
-      // 地區選單
-      const rSel = document.getElementById('regionInput');
-      rSel.innerHTML = '';
-      regions.forEach(opt => {
-        let o = document.createElement('option');
-        o.value = opt.en;
-        o.text = opt[lang] || opt.en;
-        rSel.appendChild(o);
+    // 初始化語言與地區選單
+    function setLangUi(lang) {
+      // 標題、按鈕
+      titleH2.textContent = texts.title[lang]||texts.title.en;
+      regionLabel.textContent = texts.region[lang]||texts.region.en;
+      langLabel.textContent = texts.language[lang]||texts.language.en;
+      submitBtn.textContent = texts.btn[lang]||texts.btn.en;
+      redeemLink.textContent = (texts.redeem[lang]||texts.redeem.en) + " / Redeem Voucher";
+      // 地區下拉
+      regionSel.innerHTML = `<option value="">--${texts.region[lang]||texts.region.en}--</option>`;
+      regions.forEach(r => {
+        regionSel.innerHTML += `<option value="${r.en}">${r[lang]||r.en}</option>`;
       });
-
-      // 語言選單
-      const lSel = document.getElementById('langInput');
-      lSel.innerHTML = '';
-      langOptions.forEach(opt => {
-        let o = document.createElement('option');
-        o.value = opt.val;
-        o.text = opt.label[lang];
-        lSel.appendChild(o);
+      // 表單語言選單
+      langSel.innerHTML = '';
+      uiLangs.forEach(l => {
+        langSel.innerHTML += `<option value="${l}" ${l===lang?'selected':''}>${texts.language[l]}</option>`;
+      });
+      // 預設語言選單
+      uiLangSel.innerHTML = '';
+      uiLangs.forEach(l => {
+        uiLangSel.innerHTML += `<option value="${l}" ${l===lang?'selected':''}>${texts.language[l]}</option>`;
       });
     }
 
-    // 頁面初始自動判斷語言
-    function detectBrowserLang() {
-      let blang = (navigator.language || '').toLowerCase();
-      if (blang.startsWith('zh') && blang.includes('tw')) return 'zh_tw';
-      if (blang.startsWith('zh')) return 'zh_cn';
-      if (blang.startsWith('fr')) return 'fr';
-      if (blang.startsWith('de')) return 'de';
-      if (blang.startsWith('ru')) return 'ru';
-      if (blang.startsWith('th')) return 'th';
-      if (blang.startsWith('es')) return 'es';
-      if (blang.startsWith('pt')) return 'pt';
-      if (blang.startsWith('fil') || blang.startsWith('tl')) return 'fil';
-      if (blang.startsWith('id')) return 'id';
-      return 'en';
-    }
+    // 頁面載入：自動切換語言
+    let uiLang = guessLang();
+    setLangUi(uiLang);
 
-    // 初始化流程
-    window.addEventListener("DOMContentLoaded", function() {
-      let uiLang = detectBrowserLang();
-      document.getElementById('uiLangSel').value = uiLang;
-      setUILang(uiLang);
-
-      // 語言選單切換
-      document.getElementById('uiLangSel').addEventListener('change', function() {
-        setUILang(this.value);
-      });
-    });
-
-    // ---- 提交分配會員編號，導向 jotform ----
-    async function getCodeAndRedirect() {
-      const region = document.getElementById('regionInput').value;
-      const lang = document.getElementById('langInput').value;
-      const uiLang = document.getElementById('uiLangSel').value;
-      const msgDiv = document.getElementById('msg');
+    uiLangSel.onchange = function() {
+      uiLang = uiLangSel.value;
+      setLangUi(uiLang);
       msgDiv.textContent = "";
+    };
+    langSel.onchange = function() {
+      uiLang = langSel.value;
+      setLangUi(uiLang);
+      msgDiv.textContent = "";
+    };
 
-      if (!region || !lang) {
+    // 送出表單，API 連線防呆
+    async function getCodeAndRedirect() {
+      msgDiv.textContent = "";
+      const region = regionSel.value;
+      const lang = langSel.value;
+      if(!region || !lang){
         msgDiv.textContent = texts.msg_choose[uiLang];
         return;
       }
       msgDiv.textContent = texts.msg_wait[uiLang];
+
       try {
-        const resp = await fetch('https://script.google.com/macros/s/AKfycbwatarqL8yQzmQpX9UBqxpiFs5RuqfvFgI7tOfqJKequkRs6SJ0tm2ayLRc9ur-oOYQ/exec', {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ action: "register", region: region, lang: lang })
-        });
+        // 10秒逾時
+        const resp = await Promise.race([
+          fetch('https://script.google.com/macros/s/AKfycbwatarqL8yQzmQpX9UBqxpiFs5RuqfvFgI7tOfqJKequkRs6SJ0tm2ayLRc9ur-oOYQ/exec', {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ action: "register", region: region, lang: lang })
+          }),
+          new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')), 10000))
+        ]);
+        if(!resp || !resp.ok){
+          throw new Error("API Response Error");
+        }
         const data = await resp.json();
-        if (data.error) {
-          msgDiv.textContent = texts.msg_error[uiLang] + data.error;
+        if(data.error){
+          msgDiv.textContent = texts.msg_error[uiLang] + (data.error||"");
           return;
         }
         // 組成 JotForm 預填網址
-        const jotformUrl = `https://form.jotform.com/251412432618046?member_number=${encodeURIComponent(data.member_number)}&password=${encodeURIComponent(data.password)}&website=${encodeURIComponent(data.official_website)}&lang=${encodeURIComponent(lang)}`;
+        const jotformUrl = `https://form.jotform.com/251412432618046?member_number=${encodeURIComponent(data.member_number)}&password=${encodeURIComponent(data.password)}&website=${encodeURIComponent(data.official_website)}&lang=${encodeURIComponent(jotformLangMap[lang]||'en')}`;
         window.location.href = jotformUrl;
-      } catch(e) {
+      }catch(e){
         msgDiv.textContent = texts.msg_fail[uiLang];
       }
     }
