@@ -1,87 +1,219 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Atomy HemoHIM | Flash Offer</title>
+  <title>Atomy HemoHIM - Register</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial, "Noto Sans TC", "Noto Sans SC", "Microsoft JhengHei", sans-serif; margin: 0; padding: 0; background: #f8fafc; }
-    .header { background: #ea4a2b; color: #fff; text-align: center; padding: 28px 8px 18px 8px; font-size: 2em; letter-spacing: 2px; }
-    .promo { background: #fff6eb; margin: 20px auto; max-width: 700px; border-radius: 16px; box-shadow: 0 4px 12px #eee; padding: 18px 18px 12px 18px; text-align: center; }
-    .promo strong { color: #e24430; }
-    .lang-select { margin: 10px 0 14px 0; text-align: right; padding-right: 30px; }
-    select { padding: 3px 8px; border-radius: 6px; }
-    @media (max-width: 650px) {
-      .header { font-size: 1.4em; padding: 18px 6px 12px 6px;}
-      .promo { max-width: 98vw; padding: 12px 4vw;}
-    }
+    body { font-family: Arial, "Noto Sans TC", "Noto Sans SC", "Microsoft JhengHei", sans-serif; background: #f8fafc; margin: 0; padding: 0; }
+    .main { max-width: 440px; margin: 44px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px #eee; padding: 28px; }
+    .main h2 { color: #ea4a2b; margin-bottom: 16px; }
+    .main label { font-weight: bold; display: block; margin-top: 17px; }
+    select, button { width: 100%; font-size: 1em; margin-top: 7px; padding: 8px; border-radius: 8px; border: 1px solid #d4d4d4; }
+    button { background: #ea4a2b; color: #fff; border: none; font-weight: bold; margin-top: 22px; cursor: pointer; transition: background 0.15s;}
+    button:hover { background: #d5371b; }
+    .msg { margin-top: 24px; color: #d5371b; font-weight: bold; min-height: 32px;}
+    .lang-sel { text-align:right; margin-bottom: 6px;}
+    .lang-sel select {width:auto;}
   </style>
 </head>
 <body>
-  <div class="header">Atomy HemoHIM</div>
-  <div class="lang-select">
-    <label for="langsel">🌐</label>
-    <select id="langsel">
-      <option value="en">English</option>
-      <option value="zh_tw">繁體中文</option>
-      <option value="zh_cn">简体中文</option>
-      <option value="fr">Français</option>
-      <option value="de">Deutsch</option>
-      <option value="ru">Русский</option>
-      <option value="th">ไทย</option>
-      <option value="es">Español</option>
-      <option value="pt">Português</option>
-      <option value="fil">Filipino</option>
-      <option value="id">Bahasa Indonesia</option>
-    </select>
+  <div class="main">
+    <div class="lang-sel">
+      <label style="font-size:1em;font-weight:bold;">🌐</label>
+      <select id="uiLangSel" onchange="setUILang(this.value)">
+        <option value="en">English</option>
+        <option value="zh_tw">繁體中文</option>
+        <option value="zh_cn">简体中文</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="ru">Русский</option>
+        <option value="th">ไทย</option>
+        <option value="es">Español</option>
+        <option value="pt">Português</option>
+        <option value="fil">Filipino</option>
+        <option value="id">Bahasa Indonesia</option>
+      </select>
+    </div>
+    <h2 id="ui_title">Atomy HemoHIM Member Registration</h2>
+    <label for="regionInput" id="ui_region_label">Region</label>
+    <select id="regionInput"></select>
+    <label for="langInput" id="ui_lang_label">Language</label>
+    <select id="langInput"></select>
+    <button id="submitBtn" onclick="getCodeAndRedirect()">Get Member Number</button>
+    <div id="msg" class="msg"></div>
+    <div style="margin-top:30px;text-align:center;">
+      <a id="redeemLink" href="https://form.jotform.com/251414756620050" target="_blank" style="color:#ea4a2b; text-decoration:underline; font-size:1em;">住宿券兌換表單 / Redeem Voucher</a>
+    </div>
   </div>
-  <div class="promo" id="promo-msg"></div>
   <script>
-    const promos = {
-      en: "May 29 ~ May 31, 2025  <b>Flash Offer</b>: For Those Battling Cancer or Immune Issues<br>Join 15+ Million Global Users of HemoHim - Even Atomy’s Chairman Used It to Recover from Terminal Liver Cancer.<br><strong>Order 1 Box Before May 31 and Get a $100 Hotel Voucher (Valid in 50 Chinese Cities)</strong>",
-      zh_tw: "2025年5月29日至31日 <b>限時快閃優惠</b>：特別獻給抗癌與免疫低下者<br>全球1500萬用戶推薦，連Atomy董事長都靠HemoHim逆轉末期肝硬化！<br><strong>5月31日前購買一盒，即贈價值100美元的中國50城特色民宿住宿券</strong>",
-      zh_cn: "2025年5月29日~31日 <b>限时闪购</b>：致抗癌与免疫低下者<br>全球超1500万用户见证，连Atomy董事长都用HemoHim逆转肝硬化晚期！<br><strong>5月31日前购买一盒，即送价值100美元的中国50城民宿住宿券</strong>",
-      fr: "29-31 mai 2025 <b>Offre Flash</b> : Pour les personnes luttant contre le cancer ou une faible immunité<br>Rejoignez plus de 15 millions d’utilisateurs HemoHim dans le monde – Même le président d’Atomy l’a utilisé pour se rétablir d’une cirrhose terminale.<br><strong>Commandez 1 boîte avant le 31 mai et recevez un bon hôtel de 100 $ (valable dans 50 villes chinoises)</strong>",
-      de: "29.–31. Mai 2025 <b>Blitzangebot</b>: Für Krebspatienten oder Menschen mit Immunschwäche<br>Über 15 Millionen nutzen HemoHim – sogar Atomy’s Chairman überwand Leberzirrhose damit.<br><strong>Bestellen Sie bis 31. Mai eine Box und erhalten Sie einen 100-$-Hotelgutschein (gültig in 50 chinesischen Städten)</strong>",
-      ru: "29–31 мая 2025 <b>Молниеносная акция</b>: Для борющихся с раком и иммунодефицитом<br>15+ миллионов пользователей по всему миру. Даже председатель Atomy вылечился с HemoHim от терминального цирроза!<br><strong>Закажите 1 коробку до 31 мая и получите гостиничный ваучер на $100 (действителен в 50 городах Китая)</strong>",
-      th: "29-31 พ.ค. 2025 <b>โปรโมชั่นพิเศษ</b> สำหรับผู้ต่อสู้กับโรคมะเร็งหรือปัญหาภูมิคุ้มกัน<br>กว่า 15 ล้านคนทั่วโลกเลือก HemoHim – แม้แต่ประธาน Atomy ก็ฟื้นตัวจากตับแข็งระยะสุดท้ายด้วย HemoHim<br><strong>สั่งซื้อ 1 กล่องก่อน 31 พ.ค. รับคูปองที่พักจีนมูลค่า $100 (ใช้ได้ใน 50 เมือง)</strong>",
-      es: "29–31 de mayo de 2025 <b>Oferta Flash</b>: Para quienes luchan contra el cáncer o problemas inmunes<br>Únete a más de 15 millones de usuarios de HemoHim: incluso el presidente de Atomy lo usó para recuperarse de una cirrosis terminal.<br><strong>Pide 1 caja antes del 31 de mayo y recibe un cupón hotelero de $100 (válido en 50 ciudades chinas)</strong>",
-      pt: "29 a 31 de maio de 2025 <b>Oferta Relâmpago</b>: Para quem luta contra câncer ou baixa imunidade<br>Mais de 15 milhões de usuários de HemoHim no mundo – até o presidente da Atomy recuperou-se de cirrose terminal.<br><strong>Peça 1 caixa antes de 31 de maio e ganhe voucher de hotel de $100 (válido em 50 cidades da China)</strong>",
-      fil: "Mayo 29–31, 2025 <b>Flash Offer</b>: Para sa may cancer o immune issues<br>15+ milyon ang gumagamit ng HemoHim sa buong mundo – pati si Atomy Chairman ay gumaling mula sa liver cancer gamit ito.<br><strong>Umorder ng 1 kahon bago mag-May 31 at makakuha ng $100 hotel voucher (valid sa 50 lungsod sa China)</strong>",
-      id: "29–31 Mei 2025 <b>Flash Promo</b>: Untuk pejuang kanker & masalah imun<br>15+ juta pengguna global HemoHim – bahkan Chairman Atomy pun pulih dari kanker hati stadium akhir berkat HemoHim.<br><strong>Pesan 1 kotak sebelum 31 Mei & dapatkan voucher hotel $100 (berlaku di 50 kota China)</strong>"
+    // 多語文本設定
+    const uiLangs = ["en","zh_tw","zh_cn","fr","de","ru","th","es","pt","fil","id"];
+    const texts = {
+      ui_title: {
+        en: "Atomy HemoHIM Member Registration",
+        zh_tw: "Atomy HemoHIM 會員編號領取",
+        zh_cn: "Atomy HemoHIM 会员编号领取",
+        fr: "Inscription Membre Atomy HemoHIM",
+        de: "Atomy HemoHIM Mitgliederanmeldung",
+        ru: "Регистрация участника Atomy HemoHIM",
+        th: "ลงทะเบียนรับรหัสสมาชิก Atomy HemoHIM",
+        es: "Registro de Miembro Atomy HemoHIM",
+        pt: "Registro de Membro Atomy HemoHIM",
+        fil: "Atomy HemoHIM Member Registration",
+        id: "Pendaftaran Anggota Atomy HemoHIM"
+      },
+      ui_region_label: {
+        en:"Region", zh_tw:"地區", zh_cn:"地区", fr:"Région", de:"Region", ru:"Регион", th:"ภูมิภาค", es:"Región", pt:"Região", fil:"Rehiyon", id:"Wilayah"
+      },
+      ui_lang_label: {
+        en:"Language", zh_tw:"語言", zh_cn:"语言", fr:"Langue", de:"Sprache", ru:"Язык", th:"ภาษา", es:"Idioma", pt:"Idioma", fil:"Wika", id:"Bahasa"
+      },
+      submitBtn: {
+        en:"Get Member Number", zh_tw:"領取會員編號", zh_cn:"领取会员编号", fr:"Obtenir un numéro de membre", de:"Mitgliedsnummer erhalten", ru:"Получить номер участника", th:"รับรหัสสมาชิก", es:"Obtener número de miembro", pt:"Obter número de membro", fil:"Kunin ang Member Number", id:"Dapatkan Nomor Anggota"
+      },
+      msg_choose: {
+        en:"Please select region and language.",
+        zh_tw:"請選擇地區與語言。",
+        zh_cn:"请选择地区与语言。",
+        fr:"Veuillez choisir une région et une langue.",
+        de:"Bitte wählen Sie Region und Sprache.",
+        ru:"Пожалуйста, выберите регион и язык.",
+        th:"กรุณาเลือกภูมิภาคและภาษา",
+        es:"Por favor seleccione región e idioma.",
+        pt:"Por favor, selecione região e idioma.",
+        fil:"Paki pili ng rehiyon at wika.",
+        id:"Silakan pilih wilayah dan bahasa."
+      },
+      msg_wait: {
+        en:"Please wait, assigning member number...",
+        zh_tw:"請稍候，正在分配會員編號...",
+        zh_cn:"请稍候，正在分配会员编号...",
+        fr:"Veuillez patienter, attribution du numéro...",
+        de:"Bitte warten, Mitgliedsnummer wird zugewiesen...",
+        ru:"Подождите, назначается номер участника...",
+        th:"กรุณารอสักครู่ กำลังจัดสรรรหัสสมาชิก...",
+        es:"Espere mientras se asigna el número...",
+        pt:"Por favor, aguarde enquanto atribuímos o número...",
+        fil:"Sandali lang, ina-assign ang member number...",
+        id:"Mohon tunggu, sedang menugaskan nomor anggota..."
+      },
+      msg_error: {
+        en:"Error: ",
+        zh_tw:"錯誤：",
+        zh_cn:"错误：",
+        fr:"Erreur : ",
+        de:"Fehler: ",
+        ru:"Ошибка: ",
+        th:"ข้อผิดพลาด: ",
+        es:"Error: ",
+        pt:"Erro: ",
+        fil:"Error: ",
+        id:"Kesalahan: "
+      },
+      msg_fail: {
+        en:"API connection failed. Please try again.",
+        zh_tw:"API連線失敗，請稍後再試。",
+        zh_cn:"API连接失败，请稍后再试。",
+        fr:"Connexion API échouée. Veuillez réessayer.",
+        de:"API-Verbindung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        ru:"Сбой соединения с API. Попробуйте позже.",
+        th:"การเชื่อมต่อ API ล้มเหลว กรุณาลองใหม่อีกครั้ง",
+        es:"Conexión API fallida. Inténtelo de nuevo.",
+        pt:"Falha na conexão API. Por favor, tente novamente.",
+        fil:"API connection failed. Pakisubukan muli.",
+        id:"Koneksi API gagal. Silakan coba lagi."
+      }
     };
 
-    function getParam(name) {
-      const url = new URL(window.location.href);
-      return url.searchParams.get(name) || '';
+    // 地區選單
+    const regions = [
+      {en:"Taiwan", zh_tw:"台灣", zh_cn:"台湾", fr:"Taïwan", de:"Taiwan", ru:"Тайвань", th:"ไต้หวัน", es:"Taiwán", pt:"Taiwan", fil:"Taiwan", id:"Taiwan"},
+      {en:"Hong Kong", zh_tw:"香港", zh_cn:"香港", fr:"Hong Kong", de:"Hongkong", ru:"Гонконг", th:"ฮ่องกง", es:"Hong Kong", pt:"Hong Kong", fil:"Hong Kong", id:"Hong Kong"},
+      {en:"Singapore", zh_tw:"新加坡", zh_cn:"新加坡", fr:"Singapour", de:"Singapur", ru:"Сингапур", th:"สิงคโปร์", es:"Singapur", pt:"Singapura", fil:"Singapore", id:"Singapura"},
+      {en:"Malaysia", zh_tw:"馬來西亞", zh_cn:"马来西亚", fr:"Malaisie", de:"Malaysia", ru:"Малайзия", th:"มาเลเซีย", es:"Malasia", pt:"Malásia", fil:"Malaysia", id:"Malaysia"},
+      {en:"Thailand", zh_tw:"泰國", zh_cn:"泰国", fr:"Thaïlande", de:"Thailand", ru:"Таиланд", th:"ประเทศไทย", es:"Tailandia", pt:"Tailândia", fil:"Thailand", id:"Thailand"},
+      {en:"France", zh_tw:"法國", zh_cn:"法国", fr:"France", de:"Frankreich", ru:"Франция", th:"ฝรั่งเศส", es:"Francia", pt:"França", fil:"France", id:"Perancis"},
+      {en:"Germany", zh_tw:"德國", zh_cn:"德国", fr:"Allemagne", de:"Deutschland", ru:"Германия", th:"เยอรมนี", es:"Alemania", pt:"Alemanha", fil:"Germany", id:"Jerman"},
+      {en:"Russia", zh_tw:"俄羅斯", zh_cn:"俄罗斯", fr:"Russie", de:"Russland", ru:"Россия", th:"รัสเซีย", es:"Rusia", pt:"Rússia", fil:"Russia", id:"Rusia"},
+      {en:"Philippines", zh_tw:"菲律賓", zh_cn:"菲律宾", fr:"Philippines", de:"Philippinen", ru:"Филиппины", th:"ฟิลิปปินส์", es:"Filipinas", pt:"Filipinas", fil:"Pilipinas", id:"Filipina"},
+      {en:"Indonesia", zh_tw:"印尼", zh_cn:"印尼", fr:"Indonésie", de:"Indonesien", ru:"Индонезия", th:"อินโดนีเซีย", es:"Indonesia", pt:"Indonésia", fil:"Indonesia", id:"Indonesia"},
+      {en:"Spain", zh_tw:"西班牙", zh_cn:"西班牙", fr:"Espagne", de:"Spanien", ru:"Испания", th:"สเปน", es:"España", pt:"Espanha", fil:"Spain", id:"Spanyol"}
+    ];
+
+    // 語言選單
+    const langOptions = [
+      {val:"en", label: {en:"English", zh_tw:"英文", zh_cn:"英语", fr:"Anglais", de:"Englisch", ru:"Английский", th:"อังกฤษ", es:"Inglés", pt:"Inglês", fil:"Ingles", id:"Inggris"}},
+      {val:"zh_tw", label: {en:"Traditional Chinese", zh_tw:"繁體中文", zh_cn:"繁体中文", fr:"Chinois traditionnel", de:"Traditionelles Chinesisch", ru:"Традиционный китайский", th:"จีนตัวเต็ม", es:"Chino tradicional", pt:"Chinês tradicional", fil:"Tradisyonal na Chinese", id:"Chinese Tradisional"}},
+      {val:"zh_cn", label: {en:"Simplified Chinese", zh_tw:"簡體中文", zh_cn:"简体中文", fr:"Chinois simplifié", de:"Vereinfachtes Chinesisch", ru:"Упрощенный китайский", th:"จีนตัวย่อ", es:"Chino simplificado", pt:"Chinês simplificado", fil:"Simplified Chinese", id:"Chinese Sederhana"}},
+      {val:"fr", label: {en:"French", zh_tw:"法文", zh_cn:"法语", fr:"Français", de:"Französisch", ru:"Французский", th:"ฝรั่งเศส", es:"Francés", pt:"Francês", fil:"Pranses", id:"Perancis"}},
+      {val:"de", label: {en:"German", zh_tw:"德文", zh_cn:"德语", fr:"Allemand", de:"Deutsch", ru:"Немецкий", th:"เยอรมัน", es:"Alemán", pt:"Alemão", fil:"Aleman", id:"Jerman"}},
+      {val:"ru", label: {en:"Russian", zh_tw:"俄文", zh_cn:"俄语", fr:"Russe", de:"Russisch", ru:"Русский", th:"รัสเซีย", es:"Ruso", pt:"Russo", fil:"Ruso", id:"Rusia"}},
+      {val:"th", label: {en:"Thai", zh_tw:"泰文", zh_cn:"泰语", fr:"Thaï", de:"Thailändisch", ru:"Тайский", th:"ไทย", es:"Tailandés", pt:"Tailandês", fil:"Thai", id:"Thailand"}},
+      {val:"es", label: {en:"Spanish", zh_tw:"西班牙文", zh_cn:"西班牙语", fr:"Espagnol", de:"Spanisch", ru:"Испанский", th:"สเปน", es:"Español", pt:"Espanhol", fil:"Espanyol", id:"Spanyol"}},
+      {val:"pt", label: {en:"Portuguese", zh_tw:"葡萄牙文", zh_cn:"葡萄牙语", fr:"Portugais", de:"Portugiesisch", ru:"Португальский", th:"โปรตุเกส", es:"Portugués", pt:"Português", fil:"Portuges", id:"Portugis"}},
+      {val:"fil", label: {en:"Filipino", zh_tw:"菲律賓文", zh_cn:"菲律宾语", fr:"Philippin", de:"Filipino", ru:"Филиппинский", th:"ฟิลิปปินส์", es:"Filipino", pt:"Filipino", fil:"Filipino", id:"Filipino"}},
+      {val:"id", label: {en:"Bahasa Indonesia", zh_tw:"印尼文", zh_cn:"印尼语", fr:"Indonésien", de:"Indonesisch", ru:"Индонезийский", th:"อินโดนีเซีย", es:"Indonesio", pt:"Indonésio", fil:"Indonesian", id:"Bahasa Indonesia"}}
+    ];
+
+    function setUILang(lang) {
+      // 標題與標籤
+      document.getElementById('ui_title').textContent = texts.ui_title[lang];
+      document.getElementById('ui_region_label').textContent = texts.ui_region_label[lang];
+      document.getElementById('ui_lang_label').textContent = texts.ui_lang_label[lang];
+      document.getElementById('submitBtn').textContent = texts.submitBtn[lang];
+
+      // 地區選單
+      const rSel = document.getElementById('regionInput');
+      rSel.innerHTML = '';
+      regions.forEach(opt => {
+        let o = document.createElement('option');
+        o.value = opt[lang] || opt.en;
+        o.text = opt[lang] || opt.en;
+        rSel.appendChild(o);
+      });
+
+      // 語言選單
+      const lSel = document.getElementById('langInput');
+      lSel.innerHTML = '';
+      langOptions.forEach(opt => {
+        let o = document.createElement('option');
+        o.value = opt.val;
+        o.text = opt.label[lang];
+        lSel.appendChild(o);
+      });
     }
-    function detectLang() {
-      let lang = (getParam('lang') || navigator.language || 'en').toLowerCase();
-      if (lang.startsWith('zh')) {
-        lang = lang.includes('tw') || lang.includes('hant') ? 'zh_tw' : 'zh_cn';
+
+    // 初始化
+    let defaultLang = (navigator.language || '').toLowerCase();
+    if (defaultLang.startsWith('zh') && defaultLang.includes('tw')) defaultLang = 'zh_tw';
+    else if (defaultLang.startsWith('zh')) defaultLang = 'zh_cn';
+    else if (!uiLangs.includes(defaultLang)) defaultLang = 'en';
+    setUILang(defaultLang);
+    document.getElementById('uiLangSel').value = defaultLang;
+
+    async function getCodeAndRedirect() {
+      const region = document.getElementById('regionInput').value;
+      const lang = document.getElementById('langInput').value;
+      const uiLang = document.getElementById('uiLangSel').value;
+      const msgDiv = document.getElementById('msg');
+      msgDiv.textContent = "";
+
+      if (!region || !lang) {
+        msgDiv.textContent = texts.msg_choose[uiLang];
+        return;
       }
-      if (lang.startsWith('fil')) lang = 'fil';
-      if (lang.startsWith('es')) lang = 'es';
-      if (lang.startsWith('pt')) lang = 'pt';
-      if (lang.startsWith('de')) lang = 'de';
-      if (lang.startsWith('fr')) lang = 'fr';
-      if (lang.startsWith('ru')) lang = 'ru';
-      if (lang.startsWith('th')) lang = 'th';
-      if (lang.startsWith('id')) lang = 'id';
-      if (!promos[lang]) lang = 'en';
-      return lang;
-    }
-    let currentLang = detectLang();
-    document.getElementById('promo-msg').innerHTML = promos[currentLang];
-    document.getElementById('langsel').value = currentLang;
-    document.getElementById('langsel').onchange = function() {
-      let lang = this.value;
-      document.getElementById('promo-msg').innerHTML = promos[lang];
-      const url = new URL(window.location.href);
-      url.searchParams.set('lang', lang);
-      window.history.replaceState({}, '', url);
-    };
-  </script>
-</body>
-</html>
+      msgDiv.textContent = texts.msg_wait[uiLang];
+      try {
+        const resp = await fetch('https://script.google.com/macros/s/AKfycbwatarqL8yQzmQpX9UBqxpiFs5RuqfvFgI7tOfqJKequkRs6SJ0tm2ayLRc9ur-oOYQ/exec', {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ action: "register", region: region, lang: lang })
+        });
+        const data = await resp.json();
+        if (data.error) {
+          msgDiv.textContent = texts.msg_error[uiLang] + data.error;
+          return;
+        }
+        // 組成 JotForm 預填網址
+        const jotformUrl = `https://form.jotform.com/251412432618046?member_number=${encodeURIComponent(data.member_number)}&password=${encodeURIComponent(data.password)}&website=${encodeURIComponent(data.official_website)}&lang
